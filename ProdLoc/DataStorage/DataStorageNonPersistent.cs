@@ -11,6 +11,8 @@ namespace ProdLoc
         private Boolean IsConnected;
         private Dictionary<String, UInt64> CompanyDict;
         private UInt64 NextCompanyID;
+        private Dictionary<String, Tuple<UInt64, UInt64>> BrandDict;
+        private UInt64 NextBrandID;
 
 
         // Constructor
@@ -20,6 +22,8 @@ namespace ProdLoc
             IsConnected = false;
             CompanyDict = new Dictionary<String, UInt64>();
             NextCompanyID = 0;
+            BrandDict = new Dictionary<String, UInt64>();
+            NextBrandID = 0;
         }
 
 
@@ -97,6 +101,56 @@ namespace ProdLoc
             }
         }
 
-        
+
+        // Brand Accessors
+
+        private ulong GetNextBrandID()
+        {
+            NextBrandID++;
+            return NextBrandID;
+        }
+
+        public ulong AddBrand(Brand brand)
+        {
+            ulong newBrandID;
+            if (!IsConnected) throw new Exception("DataStorage not connected.");
+            if (brand.Company != null)
+            {
+                // TODO: Perhaps add the possibility to commit/rollback for transactions.
+                //       If the add brand fails, the add company is undone.
+                AddCompany(brand.Company);
+            }
+            if (!BrandDict.ContainsKey(brand.Name))
+            {
+                newBrandID = GetNextBrandID();
+                BrandDict.Add(brand.Name, newBrandID);
+            }
+            else
+            {
+                newBrandID = BrandDict[brand.Name];
+            }
+            return newBrandID;
+        }
+
+        public Brand GetBrandByID(ulong brandID)
+        {
+            if (!IsConnected) throw new Exception("DataStorage not connected.");
+            if (!CompanyDict.ContainsValue(brandID))
+            {
+                return null;
+            }
+            else
+            {
+                KeyValuePair<String, Tuple<UInt64, UInt64>> firstResult = BrandDict.Where(entry => entry.Value.Equals(brandID)).First();
+                Company associatedCompany = GetCompanyByID(firstResult.Value.Item2);
+                return new Brand(firstResult.Value.Item1, firstResult.Key, associatedCompany);
+            }
+        }
+
+        public Brand GetBrandByName(string brandName)
+        {
+            // TODO: Implement GetBrandByName
+            throw new NotImplementedException();
+        }
     }
 }

@@ -41,5 +41,26 @@ namespace ProdLoc
         /// <returns>The Company with the given name or null.</returns>
         Company GetCompanyByName(String companyName);
 
+        /// <summary>
+        /// Adds a brand and if it does not exist yet. Persists associated Company before adding the Brand.
+        /// </summary>
+        /// <param name="brand">The Brand to add.</param>
+        /// <returns>The ID of the newly created brand, or the ID of the brand if it already exists.</returns>
+        UInt64 AddBrand(Brand brand);
+
+        /// <summary>
+        /// Returns the brand with the given ID, if it exists. Returns null if it doesn't exist.
+        /// </summary>
+        /// <param name="brandID">The Brands ID to search for.</param>
+        /// <returns>The Brand with the given ID or null</returns>
+        Brand GetBrandByID(UInt64 brandID);
+
+        /// <summary>
+        /// Returns the brand with the given name, if it exists. Returns null if it doesn't exist.
+        /// </summary>
+        /// <param name="brandName">The Brands name to search for.</param>
+        /// <returns>The Brand with the given name or null.</returns>
+        Brand GetBrandByName(String brandName);
+
     }
 }
