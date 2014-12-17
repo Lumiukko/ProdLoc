@@ -70,6 +70,20 @@ namespace ProdLoc
             return newCompanyID;
         }
 
+        public Company GetCompanyByID(ulong companyID)
+        {
+            if (!IsConnected) throw new Exception("DataStorage not connected.");
+            if (!CompanyDict.ContainsValue(companyID))
+            {
+                return null;
+            }
+            else
+            {
+                KeyValuePair<String, UInt64> firstResult = CompanyDict.Where(entry => entry.Value.Equals(companyID)).First();
+                return new Company(firstResult.Value, firstResult.Key);
+            }
+        }
+
         public Company GetCompanyByName(string companyName)
         {
             if (!IsConnected) throw new Exception("DataStorage not connected.");
@@ -82,6 +96,7 @@ namespace ProdLoc
                 return new Company(CompanyDict[companyName], companyName);
             }
         }
-    
+
+        
     }
 }

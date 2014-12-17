@@ -28,7 +28,14 @@ namespace ProdLoc
         UInt64 AddCompany(Company company);
 
         /// <summary>
-        /// Returns the company with the given name, if it exists. If it doesn't exist returns null.
+        /// Returns the company with the given ID, if it exists. Returns null if it doesn't exist.
+        /// </summary>
+        /// <param name="companyID">The Company's ID to search for.</param>
+        /// <returns>The Company with the given ID or null.</returns>
+        Company GetCompanyByID(UInt64 companyID);
+
+        /// <summary>
+        /// Returns the company with the given name, if it exists. Returns null if it doesn't exist.
         /// </summary>
         /// <param name="companyName">The Company's name to search for.</param>
         /// <returns>The Company with the given name or null.</returns>
