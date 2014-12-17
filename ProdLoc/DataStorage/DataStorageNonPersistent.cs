@@ -22,7 +22,7 @@ namespace ProdLoc
             IsConnected = false;
             CompanyDict = new Dictionary<String, UInt64>();
             NextCompanyID = 0;
-            BrandDict = new Dictionary<String, UInt64>();
+            BrandDict = new Dictionary<String, Tuple<UInt64, UInt64>>();
             NextBrandID = 0;
         }
 
@@ -114,20 +114,17 @@ namespace ProdLoc
         {
             ulong newBrandID;
             if (!IsConnected) throw new Exception("DataStorage not connected.");
-            if (brand.Company != null)
-            {
-                // TODO: Perhaps add the possibility to commit/rollback for transactions.
-                //       If the add brand fails, the add company is undone.
-                AddCompany(brand.Company);
-            }
+            // TODO: Perhaps add the possibility to commit/rollback for transactions.
+            //       If the add brand fails, the add company is undone.
+            ulong newCompanyID = AddCompany(brand.Company);
             if (!BrandDict.ContainsKey(brand.Name))
             {
                 newBrandID = GetNextBrandID();
-                BrandDict.Add(brand.Name, newBrandID);
+                BrandDict.Add(brand.Name, Tuple.Create(newBrandID, newCompanyID));
             }
             else
             {
-                newBrandID = BrandDict[brand.Name];
+                newBrandID = BrandDict[brand.Name].Item1;
             }
             return newBrandID;
         }
