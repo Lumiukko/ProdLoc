@@ -71,7 +71,12 @@ namespace ProdLoc
 
         public ulong AddCompany(Company company)
         {
-            throw new NotImplementedException();
+            // This should have a check if the company name already exists and, in this case, only return its ID.
+            MySqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = string.Format("INSERT INTO {0}company(name) VALUES(@name)", TablePrefix);
+            cmd.Parameters.AddWithValue("@name", company.Name);
+            cmd.ExecuteNonQuery();
+            return (ulong) cmd.LastInsertedId;
         }
 
         public Company GetCompanyByID(ulong companyID)
