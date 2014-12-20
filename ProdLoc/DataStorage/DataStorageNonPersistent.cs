@@ -9,10 +9,10 @@ namespace ProdLoc
     public class DataStorageNonPersistent : IDataStorage
     {
         private Boolean IsConnected;
-        private Dictionary<String, UInt64> CompanyDict;
-        private UInt64 NextCompanyID;
-        private Dictionary<String, Tuple<UInt64, UInt64>> BrandDict;
-        private UInt64 NextBrandID;
+        private Dictionary<String, Int64> CompanyDict;
+        private Int64 NextCompanyID;
+        private Dictionary<String, Tuple<Int64, Int64>> BrandDict;
+        private Int64 NextBrandID;
 
 
         // Constructor
@@ -20,9 +20,9 @@ namespace ProdLoc
         public DataStorageNonPersistent()
         {
             IsConnected = false;
-            CompanyDict = new Dictionary<String, UInt64>();
+            CompanyDict = new Dictionary<String, Int64>();
             NextCompanyID = 0;
-            BrandDict = new Dictionary<String, Tuple<UInt64, UInt64>>();
+            BrandDict = new Dictionary<String, Tuple<Int64, Int64>>();
             NextBrandID = 0;
         }
 
@@ -52,15 +52,15 @@ namespace ProdLoc
 
         // Company Accessors
 
-        private UInt64 GetNextCompanyID()
+        private Int64 GetNextCompanyID()
         {
             NextCompanyID++;
             return NextCompanyID;
         }
 
-        public ulong AddCompany(Company company)
+        public long AddCompany(Company company)
         {
-            ulong newCompanyID;
+            long newCompanyID;
             if (!IsConnected) throw new Exception("DataStorage not connected.");
             if (!CompanyDict.ContainsKey(company.Name))
             {
@@ -74,7 +74,7 @@ namespace ProdLoc
             return newCompanyID;
         }
 
-        public Company GetCompanyByID(ulong companyID)
+        public Company GetCompanyByID(long companyID)
         {
             if (!IsConnected) throw new Exception("DataStorage not connected.");
             if (!CompanyDict.ContainsValue(companyID))
@@ -83,7 +83,7 @@ namespace ProdLoc
             }
             else
             {
-                KeyValuePair<String, UInt64> firstResult = CompanyDict.Where(entry => entry.Value.Equals(companyID)).First();
+                KeyValuePair<String, Int64> firstResult = CompanyDict.Where(entry => entry.Value.Equals(companyID)).First();
                 return new Company(firstResult.Value, firstResult.Key);
             }
         }
@@ -104,19 +104,19 @@ namespace ProdLoc
 
         // Brand Accessors
 
-        private ulong GetNextBrandID()
+        private long GetNextBrandID()
         {
             NextBrandID++;
             return NextBrandID;
         }
 
-        public ulong AddBrand(Brand brand)
+        public long AddBrand(Brand brand)
         {
-            ulong newBrandID;
+            long newBrandID;
             if (!IsConnected) throw new Exception("DataStorage not connected.");
             // TODO: Perhaps add the possibility to commit/rollback for transactions.
             //       If the add brand fails, the add company is undone.
-            ulong newCompanyID = AddCompany(brand.Company);
+            long newCompanyID = AddCompany(brand.Company);
             if (!BrandDict.ContainsKey(brand.Name))
             {
                 newBrandID = GetNextBrandID();
@@ -129,7 +129,7 @@ namespace ProdLoc
             return newBrandID;
         }
 
-        public Brand GetBrandByID(ulong brandID)
+        public Brand GetBrandByID(long brandID)
         {
             if (!IsConnected) throw new Exception("DataStorage not connected.");
             if (!CompanyDict.ContainsValue(brandID))
@@ -138,7 +138,7 @@ namespace ProdLoc
             }
             else
             {
-                KeyValuePair<String, Tuple<UInt64, UInt64>> firstResult = BrandDict.Where(entry => entry.Value.Equals(brandID)).First();
+                KeyValuePair<String, Tuple<Int64, Int64>> firstResult = BrandDict.Where(entry => entry.Value.Equals(brandID)).First();
                 Company associatedCompany = GetCompanyByID(firstResult.Value.Item2);
                 return new Brand(firstResult.Value.Item1, firstResult.Key, associatedCompany);
             }

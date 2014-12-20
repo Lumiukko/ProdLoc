@@ -25,14 +25,14 @@ namespace ProdLoc
         /// </summary>
         /// <param name="company">The Company to add.</param>
         /// <returns>ID of the newly created company, or the ID of the company if it already exists.</returns>
-        UInt64 AddCompany(Company company);
+        Int64 AddCompany(Company company);
 
         /// <summary>
         /// Returns the company with the given ID, if it exists. Returns null if it doesn't exist.
         /// </summary>
         /// <param name="companyID">The Company's ID to search for.</param>
         /// <returns>The Company with the given ID or null.</returns>
-        Company GetCompanyByID(UInt64 companyID);
+        Company GetCompanyByID(Int64 companyID);
 
         /// <summary>
         /// Returns the company with the given name, if it exists. Returns null if it doesn't exist.
@@ -46,14 +46,14 @@ namespace ProdLoc
         /// </summary>
         /// <param name="brand">The Brand to add.</param>
         /// <returns>The ID of the newly created brand, or the ID of the brand if it already exists.</returns>
-        UInt64 AddBrand(Brand brand);
+        Int64 AddBrand(Brand brand);
 
         /// <summary>
         /// Returns the brand with the given ID, if it exists. Returns null if it doesn't exist.
         /// </summary>
         /// <param name="brandID">The Brands ID to search for.</param>
         /// <returns>The Brand with the given ID or null</returns>
-        Brand GetBrandByID(UInt64 brandID);
+        Brand GetBrandByID(Int64 brandID);
 
         /// <summary>
         /// Returns the brand with the given name, if it exists. Returns null if it doesn't exist.

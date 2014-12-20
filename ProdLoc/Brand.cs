@@ -9,7 +9,7 @@ namespace ProdLoc
     public class Brand
     {
 
-        public UInt64 ID { get; private set; }
+        public Int64 ID { get; private set; }
         public String Name { get; private set; }
         public Company Company { get; private set; }
 
@@ -19,7 +19,7 @@ namespace ProdLoc
             Company = company;
         }
 
-        public Brand(UInt64 id, String name, Company company)
+        public Brand(Int64 id, String name, Company company)
         {
             ID = id;
             Name = name;

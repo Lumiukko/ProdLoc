@@ -8,7 +8,7 @@ namespace ProdLoc
 {
     public class Company
     {
-        public UInt64 ID { get; private set; }
+        public Int64 ID { get; private set; }
         public String Name { get; private set; }
 
 
@@ -17,7 +17,7 @@ namespace ProdLoc
             Name = name;
         }
 
-        public Company(UInt64 id, String name)
+        public Company(Int64 id, String name)
         {
             ID = id;
             Name = name;
@@ -25,7 +25,7 @@ namespace ProdLoc
 
         public override string ToString()
         {
-            return string.Format("Company: [ID={0}, Name=\"{1}\"], ", ID, Name);
+            return string.Format("Company: [ID={0}, Name=\"{1}\"]", ID, Name);
         }
     }
 }
