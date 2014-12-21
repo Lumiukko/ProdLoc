@@ -20,6 +20,7 @@ namespace ProdLoc
         private String CurrentUser;
 
         private MySqlConnection connection;
+        private MySqlTransaction transaction;
 
         public DataStorageMySQL()
         {
@@ -33,6 +34,8 @@ namespace ProdLoc
 
             String connString = string.Format("SERVER={0};DATABASE={1};UID={2};PASSWORD={3};", Server, Database, UserID, Password);
             connection = new MySqlConnection(connString);
+
+            transaction = null;
 
         }
 
@@ -90,15 +93,24 @@ namespace ProdLoc
 
         public long AddBrand(Brand brand)
         {
-            MySqlTransaction transaction = connection.BeginTransaction();
-            AddCompany(brand.Company);
+            Boolean myTransaction = false;
+            if (transaction == null)
+            {
+                myTransaction = true;
+                transaction = connection.BeginTransaction();
+            }
+            var companyID = AddCompany(brand.Company);
             //TODO: This should have a check if the company name already exists and, in this case, only return its ID.
             MySqlCommand cmd = connection.CreateCommand();
             cmd.CommandText = string.Format("INSERT INTO {0}brand(name, companyID) VALUES(@name, @companyID)", TablePrefix);
             cmd.Parameters.AddWithValue("@name", brand.Name);
-            cmd.Parameters.AddWithValue("@companyID", brand.Company.ID);
+            cmd.Parameters.AddWithValue("@companyID", companyID);
             cmd.ExecuteNonQuery();
-            transaction.Commit();
+            if (myTransaction)
+            {
+                transaction.Commit();
+                transaction = null;
+            }
             return cmd.LastInsertedId;
         }
 
@@ -138,20 +150,29 @@ namespace ProdLoc
 
         public long AddProduct(Product product)
         {
-            MySqlTransaction transaction = connection.BeginTransaction();
-            AddBrand(product.Brand);
+            Boolean myTransaction = false;
+            if (transaction == null)
+            {
+                myTransaction = true;
+                transaction = connection.BeginTransaction();
+            }
+            var brandID = AddBrand(product.Brand);
             //TODO: This should have a check if the company name already exists and, in this case, only return its ID.
             MySqlCommand cmd = connection.CreateCommand();
             cmd.CommandText = string.Format(
                 @"INSERT INTO {0}product(name, brandID, barcode, measuringUnit, amount)
                   VALUES(@name, @brandID, @barcode, @measuringUnit, @amount)", TablePrefix);
             cmd.Parameters.AddWithValue("@name", product.Name);
-            cmd.Parameters.AddWithValue("@brandID", product.Brand.ID);
+            cmd.Parameters.AddWithValue("@brandID", brandID);
             cmd.Parameters.AddWithValue("@barcode", product.Barcode);
             cmd.Parameters.AddWithValue("@amount", product.Amount);
             cmd.Parameters.AddWithValue("@measuringUnit", product.MeasuringUnit);
             cmd.ExecuteNonQuery();
-            transaction.Commit();
+            if (myTransaction)
+            {
+                transaction.Commit();
+                transaction = null;
+            }
             return cmd.LastInsertedId;
         }
 

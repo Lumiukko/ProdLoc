@@ -17,10 +17,13 @@ namespace ProdLoc
         public String MeasuringUnit { get; private set; }
         //public List<Category> Categories { get; private set; }
 
-        public Product(String name, Brand brand)
+        public Product(String name, Brand brand, String barcode, Int32 amount, String measuringUnit)
         {
             Name = name;
             Brand = brand;
+            Barcode = barcode;
+            Amount = amount;
+            MeasuringUnit = measuringUnit;
         }
 
         public Product(Int64 id, String name, Brand brand, String barcode, Int32 amount, String measuringUnit)
