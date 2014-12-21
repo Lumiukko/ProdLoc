@@ -149,5 +149,21 @@ namespace ProdLoc
             // TODO: Implement GetBrandByName
             throw new NotImplementedException();
         }
+
+
+        public long AddProduct(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Product GetProductByID(long productID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Product GetProductByName(string productName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

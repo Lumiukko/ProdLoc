@@ -56,6 +56,7 @@
     <Compile Include="DataStorage\DataStorageMySQL.cs" />
     <Compile Include="DataStorage\DataStorageNonPersistent.cs" />
     <Compile Include="DataStorage\IDataStorage.cs" />
+    <Compile Include="Product.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
