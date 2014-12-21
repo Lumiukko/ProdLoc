@@ -62,5 +62,26 @@ namespace ProdLoc
         /// <returns>The Brand with the given name or null.</returns>
         Brand GetBrandByName(String brandName);
 
+        /// <summary>
+        /// Adds a product and if it does not exist yet. Persists associated Brand before adding the Product.
+        /// </summary>
+        /// <param name="product">The Product to add.</param>
+        /// <returns>The ID of the newly created product, or the ID of the product if it already exists.</returns>
+        Int64 AddProduct(Product product);
+
+        /// <summary>
+        /// Returns the product with the given ID, if it exists. Returns null if it doesn't exist.
+        /// </summary>
+        /// <param name="productID">The Products ID to search for.</param>
+        /// <returns>The Product with the given ID or null</returns>
+        Product GetBrandByID(Int64 productID);
+
+        /// <summary>
+        /// Returns the product with the given name, if it exists. Returns null if it doesn't exist.
+        /// </summary>
+        /// <param name="productName">The Products name to search for.</param>
+        /// <returns>The Product with the given name or null.</returns>
+        Product GetBrandByName(String productName);
+
     }
 }
