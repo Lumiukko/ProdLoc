@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace ProdLoc
 {
-    public class DataStorageNonPersistent : IDataStorage
+    // This class was used to have a local in-memory storage for testing purposes.
+    // It is currently discontinued.
+    public class DataStorageNonPersistent //: IDataStorage 
     {
         private Boolean IsConnected;
         private Dictionary<String, Int64> CompanyDict;
@@ -161,7 +163,7 @@ namespace ProdLoc
             throw new NotImplementedException();
         }
 
-        public Product GetProductByName(string productName)
+        public Product GetProductByBarcode(string barcode)
         {
             throw new NotImplementedException();
         }
