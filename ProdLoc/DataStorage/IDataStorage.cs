@@ -77,11 +77,18 @@ namespace ProdLoc
         Product GetProductByID(Int64 productID);
 
         /// <summary>
-        /// Returns the product with the given name, if it exists. Returns null if it doesn't exist.
+        /// Returns the product with the given barcode, if it exists. Returns null if it doesn't exist.
         /// </summary>
-        /// <param name="productName">The Products name to search for.</param>
+        /// <param name="barcode">The Products barcode to search for.</param>
         /// <returns>The Product with the given name or null.</returns>
-        Product GetProductByName(String productName);
+        Product GetProductByBarcode(String barcode);
+
+        /// <summary>
+        /// Returns the offer with the given ID, if it exists. Returns null if it doesn't exist.
+        /// </summary>
+        /// <param name="offerID">The Offers ID to search for.</param>
+        /// <returns>The Offer with the given ID or null</returns>
+        Offer GetOfferByID(Int64 offerID);
 
     }
 }

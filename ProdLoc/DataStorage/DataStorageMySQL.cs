@@ -195,7 +195,27 @@ namespace ProdLoc
             return product;
         }
 
-        public Product GetProductByName(string productName)
+        public Product GetProductByBarcode(string barcode)
+        {
+            String query = string.Format(
+                 @"SELECT {0}product.id AS pid, {0}product.name AS pname, {0}product.barcode, {0}product.amount, {0}product.measuringUnit,
+                          {0}brand.id AS bid, {0}brand.name AS bname,
+                          {0}company.id AS cid, {0}company.name AS cname
+                   FROM   {0}product
+                   JOIN   {0}brand ON {0}product.brandID = {0}brand.id
+                   JOIN   {0}company ON {0}brand.companyID = {0}company.id
+                    AND   {0}product.barcode = @barcode", TablePrefix);
+            var data = (IDictionary<string, object>)connection.Query(query, new { barcode = barcode }).FirstOrDefault();
+
+            Company company = new Company((long)data["cid"], (string)data["cname"]);
+            Brand brand = new Brand((long)data["bid"], (string)data["bname"], company);
+            Product product = new Product((long)data["pid"], (string)data["pname"], brand, (string)data["barcode"], (int)data["amount"], (string)data["measuringUnit"]);
+
+            return product;
+        }
+
+
+        public Offer GetOfferByID(long offerID)
         {
             throw new NotImplementedException();
         }
