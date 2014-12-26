@@ -229,3 +229,15 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 ProdLoc/App.config
+Documentation/ProdLoc_Project.aux
+Documentation/ProdLoc_Project.out
+Documentation/ProdLoc_Project.toc
+Documentation/ProdLoc_Project.synctex.gz
+Documentation/graphics/marketmapping.tex
+Documentation/graphics/marketmapping_simplified.tex
+Documentation/graphics/marketmapping.tex.preview.pdf
+Documentation/graphics/marketmapping_simplified.tex.preview.pdf
+Documentation/ProdLoc.pptx
+Documentation/ProdLoc_PPTX.pdf
+Documentation/ProdLoc_Project.pdf
+Documentation/ProdLoc_Project.tex
