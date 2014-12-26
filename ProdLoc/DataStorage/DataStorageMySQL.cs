@@ -4,7 +4,6 @@ using System.Linq;
 using MySql.Data.MySqlClient;
 using System.Collections.Specialized;
 using Dapper;
-using System.Collections;
 using System.Collections.Generic;
 
 
@@ -40,7 +39,6 @@ namespace ProdLoc
         }
 
 
-
         public bool Connect()
         {
             try
@@ -54,6 +52,7 @@ namespace ProdLoc
                 return false;
             }
         }
+
 
         public bool Disconnect()
         {
@@ -69,6 +68,7 @@ namespace ProdLoc
             }
         }
 
+
         public long AddCompany(Company company)
         {
             //TODO: This should have a check if the company name already exists and, in this case, only return its ID.
@@ -79,17 +79,20 @@ namespace ProdLoc
             return cmd.LastInsertedId;
         }
 
+
         public Company GetCompanyByID(long companyID)
         {
             Company company = connection.Query<Company>(string.Format("SELECT * FROM {0}company WHERE id = @id", TablePrefix), new { id = companyID }).FirstOrDefault();
             return company;
         }
 
+
         public Company GetCompanyByName(string companyName)
         {
             Company company = connection.Query<Company>(string.Format("SELECT * FROM {0}company WHERE name = @name", TablePrefix), new {name = companyName}).FirstOrDefault();
             return company;
         }
+
 
         public long AddBrand(Brand brand)
         {
@@ -114,6 +117,7 @@ namespace ProdLoc
             return cmd.LastInsertedId;
         }
 
+
         public Brand GetBrandByID(long brandID)
         {
             String query = string.Format(
@@ -127,6 +131,7 @@ namespace ProdLoc
 
             return brand;
         }
+
 
         public Brand GetBrandByName(string brandName)
         {
@@ -159,8 +164,8 @@ namespace ProdLoc
             var brandID = AddBrand(product.Brand);
             //TODO: This should have a check if the company name already exists and, in this case, only return its ID.
             MySqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = string.Format(
-                @"INSERT INTO {0}product(name, brandID, barcode, measuringUnit, amount)
+            cmd.CommandText = string.Format(@"
+                  INSERT INTO {0}product(name, brandID, barcode, measuringUnit, amount)
                   VALUES(@name, @brandID, @barcode, @measuringUnit, @amount)", TablePrefix);
             cmd.Parameters.AddWithValue("@name", product.Name);
             cmd.Parameters.AddWithValue("@brandID", brandID);
@@ -176,10 +181,11 @@ namespace ProdLoc
             return cmd.LastInsertedId;
         }
 
+
         public Product GetProductByID(long productID)
         {
-            String query = string.Format(
-                 @"SELECT {0}product.id AS pid, {0}product.name AS pname, {0}product.barcode, {0}product.amount, {0}product.measuringUnit,
+            String query = string.Format(@"
+                   SELECT {0}product.id AS pid, {0}product.name AS pname, {0}product.barcode, {0}product.amount, {0}product.measuringUnit,
                           {0}brand.id AS bid, {0}brand.name AS bname,
                           {0}company.id AS cid, {0}company.name AS cname
                    FROM   {0}product
@@ -195,10 +201,11 @@ namespace ProdLoc
             return product;
         }
 
+
         public Product GetProductByBarcode(string barcode)
         {
-            String query = string.Format(
-                 @"SELECT {0}product.id AS pid, {0}product.name AS pname, {0}product.barcode, {0}product.amount, {0}product.measuringUnit,
+            String query = string.Format(@"
+                   SELECT {0}product.id AS pid, {0}product.name AS pname, {0}product.barcode, {0}product.amount, {0}product.measuringUnit,
                           {0}brand.id AS bid, {0}brand.name AS bname,
                           {0}company.id AS cid, {0}company.name AS cname
                    FROM   {0}product
@@ -217,8 +224,8 @@ namespace ProdLoc
 
         public Offer GetOfferByID(long offerID)
         {
-            String query = string.Format(
-                 @"SELECT {0}offer.id AS oid, {0}offer.senderID, {0}offer.time, {0}offer.price,
+            String query = string.Format(@"
+                   SELECT {0}offer.id AS oid, {0}offer.senderID, {0}offer.time, {0}offer.price, {0}offer.marketID,
                           {0}product.id AS pid, {0}product.name AS pname, {0}product.barcode, {0}product.amount, {0}product.measuringUnit,
                           {0}brand.id AS bid, {0}brand.name AS bname,
                           {0}company.id AS cid, {0}company.name AS cname,
@@ -236,10 +243,56 @@ namespace ProdLoc
             Product product = new Product((long)data["pid"], (string)data["pname"], brand, (string)data["barcode"], (int)data["amount"], (string)data["measuringUnit"]);
             GeoLocation location = new GeoLocation((long)data["lid"], (double)data["longitude"], (double)data["latitude"], (int)data["accuracy"]);
             Market market = null; // TODO: Replace with actual market object, if exists.
-            Offer offer = new Offer((long)data["oid"], (long)data["senderID"], (DateTime)data["time"] , product, (float)data["price"], location, market);
             
+            if (data["marketID"] != null)
+            {
+                market = GetMarketByID((long)data["marketID"]);
+            }
+
+            Offer offer = new Offer((long)data["oid"], (long)data["senderID"], (DateTime)data["time"], product, (float)data["price"], location, market);
 
             return offer;
+        }
+
+
+        public Market GetMarketByID(Int64 marketID)
+        {
+            String query = string.Format(@"
+                   SELECT {0}market.id AS mid, {0}market.name AS mname, {0}market.address,
+                          {0}marketchain.id AS mcid, {0}marketchain.name AS mcname,
+                          {0}location.id as lid, {0}location.longitude, {0}location.latitude, {0}location.accuracy, 
+                          {0}market_location.order
+                   FROM   {0}market
+                   JOIN   {0}marketchain ON {0}market.chainID = {0}marketchain.id
+                   JOIN   {0}market_location ON {0}market_location.marketID = {0}market.id
+                   JOIN   {0}location ON {0}market_location.locationID = {0}location.id
+                    AND   {0}market.id = @id
+                   ORDER BY {0}market_location.order ASC", TablePrefix);
+
+            var data = (List<object>)connection.Query(query, new { id = marketID }).ToList();
+
+            List<GeoLocation> vertices = new List<GeoLocation>();
+            foreach (var item in data)
+            {
+                var dataSet = (IDictionary<string, object>)item;
+                vertices.Add(new GeoLocation((long)dataSet["lid"], (double)dataSet["longitude"], (double)dataSet["latitude"], (int)dataSet["accuracy"]));
+            }
+            GeoPolygon locationArea = new GeoPolygon(vertices);
+
+            var first = (IDictionary<string, object>)data.First();
+            MarketChain mchain = new MarketChain((long)first["mcid"], (string)first["mcname"]);
+            Market market = new Market((long)first["mid"], (string)first["mname"], (string)first["address"], mchain, locationArea);
+
+            return market;
+        }
+
+
+        public List<Offer> GetUnmappedOffers(Int32 count)
+        {
+            throw new NotImplementedException();
+
+            // List<Offer> offerList = new List<Offer>();
+            // return offerList;
         }
 
 
@@ -286,9 +339,10 @@ namespace ProdLoc
                   `measuringUnit` text NOT NULL,
                   PRIMARY KEY (`id`)
                 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
-            ", TablePrefix);
+                ", TablePrefix);
             connection.QueryMultiple(query);
         }
+
 
         public void TableTearDown()
         {
@@ -298,7 +352,7 @@ namespace ProdLoc
                 DROP TABLE IF EXISTS `{0}location`;
                 DROP TABLE IF EXISTS `{0}offer`;
                 DROP TABLE IF EXISTS `{0}product`;
-            ", TablePrefix);
+                ", TablePrefix);
             connection.QueryMultiple(query);
         }
     }

@@ -30,7 +30,7 @@ namespace ProdLoc
 
         public override String ToString()
         {
-            return string.Format("GeoLocation: [ID={0}, Longitude=\"{1}\", Latitude={2}, Accuracy={3}]", ID, Longitude, Latitude, Accuracy);
+            return string.Format("GeoLocation: [ID={0}, Longitude={1}, Latitude={2}, Accuracy={3}]", ID, Longitude, Latitude, Accuracy);
         }
     }
 }

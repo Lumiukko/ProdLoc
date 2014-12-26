@@ -37,9 +37,20 @@ namespace ProdLoc
             Market = market;
         }
 
+        /// <summary>
+        /// Returns a map of Markets with an associated probability value of how likely the
+        /// particular Market is associated with the offers location.
+        /// </summary>
+        /// <returns>Map of Markets and probabilities that correspond to the offers location.</returns>
+        public Dictionary<Market, float> GetMarketMappings()
+        {
+            throw new NotImplementedException();
+        }
+
+
         public override String ToString()
         {
-            return string.Format("Offer: [ID={0}, Sender=\"{1}\", Time={2}, Price={3}, Product={4}, Location={5}, Market={6}]", ID, Sender, Time, Price, Product, Location, (Market != null ? Market.ToString() : "NONE"));
+            return string.Format("Offer: [ID={0}, Sender={1}, Time={2}, Price={3}, Product={4}, Location={5}, Market={6}]", ID, Sender, Time, Price, Product, Location, (Market != null ? Market.ToString() : "NONE"));
         }
     }
 }

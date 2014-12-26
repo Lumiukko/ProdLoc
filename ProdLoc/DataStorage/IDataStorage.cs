@@ -87,8 +87,22 @@ namespace ProdLoc
         /// Returns the offer with the given ID, if it exists. Returns null if it doesn't exist.
         /// </summary>
         /// <param name="offerID">The Offers ID to search for.</param>
-        /// <returns>The Offer with the given ID or null</returns>
+        /// <returns>The Offer with the given ID or null.</returns>
         Offer GetOfferByID(Int64 offerID);
+
+        /// <summary>
+        /// Returns the market with the given ID, if it exists. Returns null if it doesn't exist.
+        /// </summary>
+        /// <param name="marketID">The Markets ID to search for.</param>
+        /// <returns>The Market with the given ID or null.</returns>
+        Market GetMarketByID(Int64 marketID);
+
+        /// <summary>
+        /// Returns a given number of offers that have not yet been mapped to a market.
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns>List of Offers without an associated Market</returns>
+        List<Offer> GetUnmappedOffers(Int32 count);
 
         /// <summary>
         /// Sets up the table structure in the database. Use with caution!

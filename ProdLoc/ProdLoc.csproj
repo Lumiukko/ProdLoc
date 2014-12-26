@@ -56,9 +56,13 @@
     <Compile Include="DataStorage\DataStorageMySQL.cs" />
     <Compile Include="DataStorage\DataStorageNonPersistent.cs" />
     <Compile Include="DataStorage\IDataStorage.cs" />
+    <Compile Include="DataStructure\GeoLocation.cs" />
+    <Compile Include="DataStructure\GeoPolygon.cs" />
+    <Compile Include="DataStructure\Market.cs" />
+    <Compile Include="DataStructure\MarketChain.cs" />
     <Compile Include="DataStructure\Offer.cs" />
     <Compile Include="DataStructure\Product.cs" />
-    <Compile Include="DataStructure\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

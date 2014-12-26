@@ -24,6 +24,11 @@ namespace ProdLoc
         {
             throw new NotImplementedException();
         }
+
+        public override String ToString()
+        {
+            return string.Format("GeoPolygon: [({0})]", string.Join(", ", Vertices));
+        }
     }
 
     

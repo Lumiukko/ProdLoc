@@ -33,7 +33,7 @@ namespace ProdLoc
 
         public override String ToString()
         {
-            return string.Format("Market: [ID={0}, Name=\"{1}\", Address={2}, MarketChain={3}]", ID, Name, Address, MarketChain);
+            return string.Format("Market: [ID={0}, Name=\"{1}\", Address={2}, MarketChain={3}, LocationArea={4}]", ID, Name, Address, MarketChain, LocationArea);
         }
     }
 }
