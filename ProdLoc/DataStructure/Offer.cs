@@ -13,24 +13,26 @@ namespace ProdLoc
         public DateTime Time { get; private set; }
         public Product Product { get; private set; }
         public float Price { get; private set; }        // Currently in the local currency of the market
-        //public Location Location { get; private set; }
-        //public Market Market { get; private set; }
+        public Market Market { get; private set; }
+        public GeoLocation Location { get; private set; }
 
-        public Offer(Int64 sender, DateTime time, Product product, float price)
+        public Offer(Int64 sender, DateTime time, Product product, float price, Market market)
         {
             Sender = sender;
             Time = time;
             Product = product;
             Price = price;
+            Market = market;
         }
 
-        public Offer(Int64 id, Int64 sender, DateTime time, Product product, float price)
+        public Offer(Int64 id, Int64 sender, DateTime time, Product product, float price, Market market)
         {
             ID = id;
             Sender = sender;
             Time = time;
             Product = product;
             Price = price;
+            Market = market;
         }
 
         public override String ToString()
