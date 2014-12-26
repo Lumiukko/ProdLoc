@@ -51,13 +51,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Brand.cs" />
-    <Compile Include="Company.cs" />
+    <Compile Include="DataStructure\Brand.cs" />
+    <Compile Include="DataStructure\Company.cs" />
     <Compile Include="DataStorage\DataStorageMySQL.cs" />
     <Compile Include="DataStorage\DataStorageNonPersistent.cs" />
     <Compile Include="DataStorage\IDataStorage.cs" />
-    <Compile Include="Product.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="DataStructure\Offer.cs" />
+    <Compile Include="DataStructure\Product.cs" />
+    <Compile Include="DataStructure\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -48,7 +48,9 @@ namespace ProdLoc
             Product p0 = new Product("TestProduct", b0, "1234567890", 500, "t");
 
             Product p1 = ds.GetProductByBarcode("7613032872731");
-            Console.WriteLine(p1.ToString());
+
+            Offer o0 = ds.GetOfferByID(1);
+            Console.WriteLine(o0.ToString());
 
             ds.Disconnect();
 
