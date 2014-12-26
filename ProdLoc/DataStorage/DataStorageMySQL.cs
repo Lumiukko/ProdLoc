@@ -319,6 +319,27 @@ namespace ProdLoc
                   PRIMARY KEY (`id`)
                 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
+                CREATE TABLE IF NOT EXISTS `pl_market` (
+                  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                  `name` text NOT NULL,
+                  `address` text NOT NULL,
+                  `chainID` bigint(20) NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+                CREATE TABLE IF NOT EXISTS `pl_marketchain` (
+                  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                  `name` text NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+                CREATE TABLE IF NOT EXISTS `pl_market_location` (
+                  `marketID` bigint(20) NOT NULL,
+                  `locationID` bigint(20) NOT NULL,
+                  `order` int(11) NOT NULL,
+                  PRIMARY KEY (`marketID`,`locationID`,`order`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
                 CREATE TABLE IF NOT EXISTS `{0}offer` (
                   `id` bigint(20) NOT NULL AUTO_INCREMENT,
                   `senderID` bigint(20) NOT NULL,
@@ -350,8 +371,12 @@ namespace ProdLoc
                 DROP TABLE IF EXISTS `{0}brand`;
                 DROP TABLE IF EXISTS `{0}company`;
                 DROP TABLE IF EXISTS `{0}location`;
+                DROP TABLE IF EXISTS `{0}market`;
+                DROP TABLE IF EXISTS `{0}marketchain`;
+                DROP TABLE IF EXISTS `{0}market_location`;
                 DROP TABLE IF EXISTS `{0}offer`;
                 DROP TABLE IF EXISTS `{0}product`;
+                
                 ", TablePrefix);
             connection.QueryMultiple(query);
         }
