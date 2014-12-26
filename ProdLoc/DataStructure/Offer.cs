@@ -16,28 +16,30 @@ namespace ProdLoc
         public Market Market { get; private set; }
         public GeoLocation Location { get; private set; }
 
-        public Offer(Int64 sender, DateTime time, Product product, float price, Market market)
+        public Offer(Int64 sender, DateTime time, Product product, float price, GeoLocation location, Market market)
         {
             Sender = sender;
             Time = time;
             Product = product;
             Price = price;
+            Location = location;
             Market = market;
         }
 
-        public Offer(Int64 id, Int64 sender, DateTime time, Product product, float price, Market market)
+        public Offer(Int64 id, Int64 sender, DateTime time, Product product, float price, GeoLocation location, Market market)
         {
             ID = id;
             Sender = sender;
             Time = time;
             Product = product;
             Price = price;
+            Location = location;
             Market = market;
         }
 
         public override String ToString()
         {
-            return string.Format("Offer: [ID={0}, Sender=\"{1}\", Time={2}, Price={3}, Product={4}]", ID, Sender, Time, Price, Product);
+            return string.Format("Offer: [ID={0}, Sender=\"{1}\", Time={2}, Price={3}, Product={4}, Location={5}, Market={6}]", ID, Sender, Time, Price, Product, Location, (Market != null ? Market.ToString() : "NONE"));
         }
     }
 }
