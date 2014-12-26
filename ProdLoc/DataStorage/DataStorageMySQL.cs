@@ -221,20 +221,85 @@ namespace ProdLoc
                  @"SELECT {0}offer.id AS oid, {0}offer.senderID, {0}offer.time, {0}offer.price,
                           {0}product.id AS pid, {0}product.name AS pname, {0}product.barcode, {0}product.amount, {0}product.measuringUnit,
                           {0}brand.id AS bid, {0}brand.name AS bname,
-                          {0}company.id AS cid, {0}company.name AS cname
+                          {0}company.id AS cid, {0}company.name AS cname,
+                          {0}location.id AS lid, {0}location.longitude, {0}location.latitude, {0}location.accuracy
                    FROM   {0}offer
                    JOIN   {0}product ON {0}offer.productID = {0}product.id
                    JOIN   {0}brand ON {0}product.brandID = {0}brand.id
                    JOIN   {0}company ON {0}brand.companyID = {0}company.id
+                   JOIN   {0}location ON {0}offer.locationID = {0}location.id
                     AND   {0}offer.id = @id", TablePrefix);
             var data = (IDictionary<string, object>)connection.Query(query, new { id = offerID }).FirstOrDefault();
 
             Company company = new Company((long)data["cid"], (string)data["cname"]);
             Brand brand = new Brand((long)data["bid"], (string)data["bname"], company);
             Product product = new Product((long)data["pid"], (string)data["pname"], brand, (string)data["barcode"], (int)data["amount"], (string)data["measuringUnit"]);
-            Offer offer = new Offer((long)data["oid"], (long)data["senderID"], (DateTime)data["time"] , product, (float)data["price"]);
+            GeoLocation location = new GeoLocation((long)data["lid"], (double)data["longitude"], (double)data["latitude"], (int)data["accuracy"]);
+            Market market = null; // TODO: Replace with actual market object, if exists.
+            Offer offer = new Offer((long)data["oid"], (long)data["senderID"], (DateTime)data["time"] , product, (float)data["price"], location, market);
+            
 
             return offer;
+        }
+
+
+        public void TableSetUp() {
+            string query = string.Format(@"
+                CREATE TABLE IF NOT EXISTS `{0}brand` (
+                  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                  `name` text NOT NULL,
+                  `companyID` bigint(20) NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+                CREATE TABLE IF NOT EXISTS `{0}company` (
+                  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                  `name` text NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+                CREATE TABLE IF NOT EXISTS `{0}location` (
+                  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                  `longitude` double NOT NULL,
+                  `latitude` double NOT NULL,
+                  `accuracy` int(11) NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+                CREATE TABLE IF NOT EXISTS `{0}offer` (
+                  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                  `senderID` bigint(20) NOT NULL,
+                  `time` datetime NOT NULL,
+                  `productID` bigint(20) NOT NULL,
+                  `price` float NOT NULL,
+                  `locationID` bigint(20) NOT NULL,
+                  `marketID` bigint(20) DEFAULT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+                CREATE TABLE IF NOT EXISTS `{0}product` (
+                  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                  `name` text NOT NULL,
+                  `brandID` bigint(20) NOT NULL,
+                  `barcode` text NOT NULL,
+                  `amount` int(11) NOT NULL,
+                  `measuringUnit` text NOT NULL,
+                  PRIMARY KEY (`id`)
+                ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+            ", TablePrefix);
+            connection.QueryMultiple(query);
+        }
+
+        public void TableTearDown()
+        {
+            string query = string.Format(@"
+                DROP TABLE IF EXISTS `{0}brand`;
+                DROP TABLE IF EXISTS `{0}company`;
+                DROP TABLE IF EXISTS `{0}location`;
+                DROP TABLE IF EXISTS `{0}offer`;
+                DROP TABLE IF EXISTS `{0}product`;
+            ", TablePrefix);
+            connection.QueryMultiple(query);
         }
     }
 }

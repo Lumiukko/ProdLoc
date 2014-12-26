@@ -90,5 +90,14 @@ namespace ProdLoc
         /// <returns>The Offer with the given ID or null</returns>
         Offer GetOfferByID(Int64 offerID);
 
+        /// <summary>
+        /// Sets up the table structure in the database. Use with caution!
+        /// </summary>
+        void TableSetUp();
+
+        /// <summary>
+        /// Tears down the table structure in the database. Use with caution!
+        /// </summary>
+        void TableTearDown();
     }
 }
