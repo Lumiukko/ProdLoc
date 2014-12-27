@@ -33,12 +33,28 @@ namespace ProdLoc
         public double Circumference()
         {
             double circumference = 0;
-            for (int i = 0; i < Vertices.Count-1; i++)
+            for (int i = 0; i < Vertices.Count - 1; i++)
             {
                 circumference += Vertices.ElementAt(i).Distance(Vertices.ElementAt(i+1));                
             }
             circumference += Vertices.First().Distance(Vertices.Last());
             return circumference;
+        }
+
+
+        /// <summary>
+        /// Returns the area of the polygon (assuming it is a simple polygon, meaning it does not intersect itself) in square meters.
+        /// </summary>
+        /// <returns>The area of the polygon in square meters.</returns>
+        public double Area()
+        {
+            double acc = 0;
+            for (int i = 0; i < Vertices.Count - 1; i++)
+            {
+                acc += Vertices.ElementAt(i).Longitude * Vertices.ElementAt(i + 1).Latitude - Vertices.ElementAt(i + 1).Longitude * Vertices.ElementAt(i).Latitude;
+            }
+            acc += Vertices.Last().Longitude * Vertices.First().Latitude - Vertices.First().Longitude * Vertices.Last().Latitude;
+            return 110 * 1000 * 1000 * Math.Abs(acc) / 2; // Aproximation of longitude/latitude degrees to meters in the european area.
         }
 
 
