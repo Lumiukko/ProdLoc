@@ -20,10 +20,30 @@ namespace ProdLoc
         /// This is a requirement for some clipping algorithms in order to use the polygon as a clipping window.
         /// </summary>
         /// <returns>True if the polygon is convex, or False if it is not.</returns>
-        public bool isConvex()
+        public bool IsConvex()
         {
             throw new NotImplementedException();
         }
+
+
+        /// <summary>
+        /// Returns the circumference of the polygon in meters, or all distances between the vertices in a cycle.
+        /// </summary>
+        /// <returns>The circumference in meters.</returns>
+        public double Circumference()
+        {
+            double circumference = 0;
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                if (i < Vertices.Count - 1)
+                {
+                    circumference += Vertices.ElementAt(i).Distance(Vertices.ElementAt(i+1));
+                }
+                circumference += Vertices.First().Distance(Vertices.Last());
+            }
+            return circumference;
+        }
+
 
         public override String ToString()
         {
