@@ -33,14 +33,11 @@ namespace ProdLoc
         public double Circumference()
         {
             double circumference = 0;
-            for (int i = 0; i < Vertices.Count; i++)
+            for (int i = 0; i < Vertices.Count-1; i++)
             {
-                if (i < Vertices.Count - 1)
-                {
-                    circumference += Vertices.ElementAt(i).Distance(Vertices.ElementAt(i+1));
-                }
-                circumference += Vertices.First().Distance(Vertices.Last());
+                circumference += Vertices.ElementAt(i).Distance(Vertices.ElementAt(i+1));                
             }
+            circumference += Vertices.First().Distance(Vertices.Last());
             return circumference;
         }
 
