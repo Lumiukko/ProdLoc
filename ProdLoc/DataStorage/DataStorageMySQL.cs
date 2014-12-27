@@ -242,15 +242,14 @@ namespace ProdLoc
             Brand brand = new Brand((long)data["bid"], (string)data["bname"], company);
             Product product = new Product((long)data["pid"], (string)data["pname"], brand, (string)data["barcode"], (int)data["amount"], (string)data["measuringUnit"]);
             GeoLocation location = new GeoLocation((long)data["lid"], (double)data["longitude"], (double)data["latitude"], (int)data["accuracy"]);
-            Market market = null; // TODO: Replace with actual market object, if exists.
             
+            Market market = null;
             if (data["marketID"] != null)
             {
                 market = GetMarketByID((long)data["marketID"]);
             }
 
             Offer offer = new Offer((long)data["oid"], (long)data["senderID"], (DateTime)data["time"], product, (float)data["price"], location, market);
-
             return offer;
         }
 
@@ -289,10 +288,37 @@ namespace ProdLoc
 
         public List<Offer> GetUnmappedOffers(Int32 count)
         {
-            throw new NotImplementedException();
+            String query = string.Format(@"
+                   SELECT {0}offer.id AS oid, {0}offer.senderID, {0}offer.time, {0}offer.price, {0}offer.marketID,
+                          {0}product.id AS pid, {0}product.name AS pname, {0}product.barcode, {0}product.amount, {0}product.measuringUnit,
+                          {0}brand.id AS bid, {0}brand.name AS bname,
+                          {0}company.id AS cid, {0}company.name AS cname,
+                          {0}location.id AS lid, {0}location.longitude, {0}location.latitude, {0}location.accuracy
+                   FROM   {0}offer
+                   JOIN   {0}product ON {0}offer.productID = {0}product.id
+                   JOIN   {0}brand ON {0}product.brandID = {0}brand.id
+                   JOIN   {0}company ON {0}brand.companyID = {0}company.id
+                   JOIN   {0}location ON {0}offer.locationID = {0}location.id
+                    AND   {0}offer.marketID IS NULL
+                   LIMIT  0, @numOffers", TablePrefix);
 
-            // List<Offer> offerList = new List<Offer>();
-            // return offerList;
+            var data = (List<object>)connection.Query(query, new { numOffers = count }).ToList();
+
+            List<Offer> offerList = new List<Offer>();
+
+            foreach (var item in data)
+            {
+                var dataSet = (IDictionary<string, object>)item;
+                Company company = new Company((long)dataSet["cid"], (string)dataSet["cname"]);
+                Brand brand = new Brand((long)dataSet["bid"], (string)dataSet["bname"], company);
+                Product product = new Product((long)dataSet["pid"], (string)dataSet["pname"], brand, (string)dataSet["barcode"], (int)dataSet["amount"], (string)dataSet["measuringUnit"]);
+                GeoLocation location = new GeoLocation((long)dataSet["lid"], (double)dataSet["longitude"], (double)dataSet["latitude"], (int)dataSet["accuracy"]);
+                Market market = null;
+                Offer offer = new Offer((long)dataSet["oid"], (long)dataSet["senderID"], (DateTime)dataSet["time"], product, (float)dataSet["price"], location, market);
+                offerList.Add(offer);
+            }
+
+            return offerList;
         }
 
 
