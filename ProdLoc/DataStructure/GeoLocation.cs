@@ -13,12 +13,14 @@ namespace ProdLoc
         public Double Latitude { get; private set; }
         public int Accuracy { get; private set; } 
 
+
         public GeoLocation(Double longitude, Double latitude, int accuracy)
         {
             Longitude = longitude;
             Latitude = latitude;
             Accuracy = accuracy;
         }
+
 
         public GeoLocation(Int64 id, Double longitude, Double latitude, int accuracy)
         {
@@ -27,6 +29,7 @@ namespace ProdLoc
             Latitude = latitude;
             Accuracy = accuracy;
         }
+
 
         /// <summary>
         /// Returns the distance of this location to another one in meters.
@@ -38,9 +41,13 @@ namespace ProdLoc
             double r = 6378.137;
             double dLat = (location.Latitude - this.Latitude) * Math.PI / 180;
             double dLong = (location.Longitude - this.Longitude) * Math.PI / 180;
-            double a = Math.Pow(Math.Sin(dLat / 2), 2) + Math.Cos(this.Latitude * Math.PI / 180) * Math.Cos(location.Latitude * Math.PI / 180) * Math.Pow(Math.Sin(dLong / 180), 2);
+            double a = Math.Pow(Math.Sin(dLat / 2), 2)
+                        + Math.Cos(this.Latitude * Math.PI / 180)
+                        * Math.Cos(location.Latitude * Math.PI / 180)
+                        * Math.Pow(Math.Sin(dLong / 2), 2);
             return 1000 * r * 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
         }
+
 
         public override String ToString()
         {
