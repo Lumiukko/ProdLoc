@@ -30,15 +30,34 @@ namespace ProdLoc
             {
                 double dLeft = locList.ElementAt(i).Distance(locList.ElementAt(i - 1));
                 double dRight = locList.ElementAt(i).Distance(locList.ElementAt(i + 1));
+
+                // Calculating the cross product to figure out whether or not the angle is larger than 180°
+                double vLeftX = locList.ElementAt(i).Latitude - locList.ElementAt(i - 1).Latitude;
+                double vLeftY = locList.ElementAt(i).Longitude - locList.ElementAt(i - 1).Longitude;
+                double vRightX = locList.ElementAt(i).Latitude - locList.ElementAt(i + 1).Latitude;
+                double vRightY = locList.ElementAt(i).Longitude - locList.ElementAt(i + 1).Longitude;
+                double cross = vLeftX * vRightY - vRightX * vLeftY;
+                double sineA = cross / dLeft / dRight;
+
+                if (sineA < 0)
+                {
+                    return false;
+                }
+
+                // We only need the following lines if we want to know the exact angle.
+                /*
                 double dCenter = locList.ElementAt(i - 1).Distance(locList.ElementAt(i + 1));
-                double angle = Math.Acos((dLeft * dLeft + dRight * dRight - dCenter * dCenter) / (2 * dLeft * dRight));
-                angle *= (180 / Math.PI);
-                //TODO: Something is FUBAR here, the angles are completely messed up...
-                Console.WriteLine(string.Format("Angle: {0}\n\tdLeft: {1}\n\tdRight: {2}\n\tdCenter: {3}", angle, dLeft, dRight, dCenter));
+                double angle = (180 / Math.PI) * Math.Acos((dLeft * dLeft + dRight * dRight - dCenter * dCenter) / (2 * dLeft * dRight));
+                if (sineA < 0)
+                {
+                    angle += 180;
+                }
+                // Console.WriteLine(string.Format("Angle: {0}\n\tdLeft: {1}\n\tdRight: {2}\n\tdCenter: {3}\n\tsin(a): {4}", angle, dLeft, dRight, dCenter, sineA));
                 if (angle > 180)
                 {
-                    //return false;  // If an internal angle is larger than 180°, this cannot be a convex polygon.
+                    return false;  // If an internal angle is larger than 180°, this cannot be a convex polygon.
                 }
+                */
             }
             return true;
         }
@@ -48,14 +67,14 @@ namespace ProdLoc
         /// Returns the circumference of the polygon in meters, or all distances between the vertices in a cycle.
         /// </summary>
         /// <returns>The circumference in meters.</returns>
-        public double Circumference()
+        public UInt64 Circumference()
         {
-            double circumference = 0;
+            UInt64 circumference = 0;
             for (int i = 0; i < Vertices.Count - 1; i++)
             {
-                circumference += Vertices.ElementAt(i).Distance(Vertices.ElementAt(i+1));                
+                circumference += (UInt64) Vertices.ElementAt(i).Distance(Vertices.ElementAt(i+1));                
             }
-            circumference += Vertices.First().Distance(Vertices.Last());
+            circumference += (UInt64) Vertices.First().Distance(Vertices.Last());
             return circumference;
         }
 
@@ -64,7 +83,7 @@ namespace ProdLoc
         /// Returns the area of the polygon (assuming it is a simple polygon, meaning it does not intersect itself) in square meters.
         /// </summary>
         /// <returns>The area of the polygon in square meters.</returns>
-        public double Area()
+        public UInt64 Area()
         {
             double acc = 0;
             for (int i = 0; i < Vertices.Count - 1; i++)
@@ -72,9 +91,9 @@ namespace ProdLoc
                 acc += Vertices.ElementAt(i).Longitude * Vertices.ElementAt(i + 1).Latitude - Vertices.ElementAt(i + 1).Longitude * Vertices.ElementAt(i).Latitude;
             }
             acc += Vertices.Last().Longitude * Vertices.First().Latitude - Vertices.First().Longitude * Vertices.Last().Latitude;
-            return 110 * 1000 * 1000 * Math.Abs(acc) / 2; // Aproximation of longitude/latitude degrees to meters in the central european area.
+            return (UInt64) (10.5892 * 1000 * 1000 * 1000 *  Math.Abs(acc) / 2); // Aproximation of longitude/latitude degrees to meters in the central european area.
         }
-
+        // 0,01129909
 
         public override String ToString()
         {
