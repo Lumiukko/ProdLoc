@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProdLoc
 {
@@ -93,7 +91,7 @@ namespace ProdLoc
             acc += Vertices.Last().Longitude * Vertices.First().Latitude - Vertices.First().Longitude * Vertices.Last().Latitude;
             return (UInt64) (10.5892 * 1000 * 1000 * 1000 *  Math.Abs(acc) / 2); // Aproximation of longitude/latitude degrees to meters in the central european area.
         }
-        // 0,01129909
+
 
         public override String ToString()
         {

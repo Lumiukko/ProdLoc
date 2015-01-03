@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProdLoc
 {
@@ -20,10 +16,9 @@ namespace ProdLoc
         }
 
         public Brand(Int64 id, String name, Company company)
+            : this(name, company)
         {
             ID = id;
-            Name = name;
-            Company = company;
         }
 
         public override String ToString()

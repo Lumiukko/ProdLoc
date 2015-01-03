@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProdLoc
 {
@@ -23,11 +19,9 @@ namespace ProdLoc
 
 
         public GeoLocation(Int64 id, Double longitude, Double latitude, int accuracy)
+            : this(longitude, latitude, accuracy)
         {
             ID = id;
-            Longitude = longitude;
-            Latitude = latitude;
-            Accuracy = accuracy;
         }
 
 

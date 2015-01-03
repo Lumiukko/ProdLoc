@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProdLoc
 {
@@ -23,12 +19,9 @@ namespace ProdLoc
         }
 
         public Market(Int64 id, String name, String address, MarketChain marketChain, GeoPolygon locationArea)
+            : this(name, address, marketChain, locationArea)
         {
             ID = id;
-            Name = name;
-            Address = address;
-            MarketChain = marketChain;
-            LocationArea = locationArea;
         }
 
         public override String ToString()

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProdLoc
 {
@@ -17,9 +13,9 @@ namespace ProdLoc
         }
 
         public MarketChain(Int64 id, String name)
+            : this(name)
         {
             ID = id;
-            Name = name;
         }
 
         public override string ToString()

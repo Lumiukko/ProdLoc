@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProdLoc
 {
@@ -27,14 +24,9 @@ namespace ProdLoc
         }
 
         public Offer(Int64 id, Int64 sender, DateTime time, Product product, float price, GeoLocation location, Market market)
+            : this(sender, time, product, price, location, market)
         {
             ID = id;
-            Sender = sender;
-            Time = time;
-            Product = product;
-            Price = price;
-            Location = location;
-            Market = market;
         }
 
         /// <summary>
